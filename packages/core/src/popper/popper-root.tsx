@@ -112,6 +112,7 @@ export interface PopperRootOptions {
 	 * This will be exposed to CSS as `--kb-popper-content-overflow-padding`.
 	 */
 	overflowPadding?: number;
+
 }
 
 export interface PopperRootProps extends ParentProps<PopperRootOptions> {}
@@ -203,6 +204,8 @@ export function PopperRoot(props: PopperRootProps) {
 			) {
 				throw new Error("`flip` expects a spaced-delimited list of placements");
 			}
+
+			console.log("popper flip enabled");
 
 			// https://floating-ui.com/docs/flip
 			middleware.push(
