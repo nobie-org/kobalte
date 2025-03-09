@@ -12,11 +12,7 @@
  * https://github.com/emilkowalski/sonner/blob/0d027fd3a41013fada9d8a3ef807bcc87053bde8/src/index.tsx
  */
 
-import {
-	OverrideComponentProps,
-	createGenerateId,
-	mergeDefaultProps,
-} from "@kobalte/utils";
+import { OverrideComponentProps, createGenerateId, mergeDefaultProps } from "@kobalte/utils";
 import {
 	type JSX,
 	type ValidComponent,
@@ -28,22 +24,15 @@ import {
 
 import { combineStyle } from "@solid-primitives/props";
 import { DATA_TOP_LAYER_ATTR } from "../dismissable-layer/layer-stack";
-import {
-	type ElementOf,
-	Polymorphic,
-	type PolymorphicProps,
-} from "../polymorphic";
-import {
-	ToastRegionContext,
-	type ToastRegionContextValue,
-} from "./toast-region-context";
+import { type ElementOf, Polymorphic, type PolymorphicProps } from "../polymorphic";
+import { ToastRegionContext, type ToastRegionContextValue } from "./toast-region-context";
 import { toastStore } from "./toast-store";
 import {
 	TOAST_HOTKEY_PLACEHOLDER,
 	TOAST_REGION_INTL_TRANSLATIONS,
 	type ToastRegionIntlTranslations,
 } from "./toast.intl";
-import type { ToastSwipeDirection } from "./types";
+import type { ToastConfig, ToastSwipeDirection } from "./types";
 
 export interface ToastRegionOptions {
 	/** The localized strings of the component. */
@@ -109,9 +98,8 @@ export interface ToastRegionRenderProps extends ToastRegionCommonProps {
 	"data-kb-top-layer": string | undefined;
 }
 
-export type ToastRegionProps<
-	T extends ValidComponent | HTMLElement = HTMLElement,
-> = ToastRegionOptions & Partial<ToastRegionCommonProps<ElementOf<T>>>;
+export type ToastRegionProps<T extends ValidComponent | HTMLElement = HTMLElement> =
+	ToastRegionOptions & Partial<ToastRegionCommonProps<ElementOf<T>>>;
 
 /**
  * The fixed area where toasts appear. Users can jump to by pressing a hotkey.
@@ -136,36 +124,44 @@ export function ToastRegion<T extends ValidComponent = "div">(
 		props as ToastRegionProps,
 	);
 
-	const [local, others] = splitProps(
-		mergedProps as typeof mergedProps & { id: string },
-		[
-			"translations",
-			"style",
-			"hotkey",
-			"duration",
-			"limit",
-			"swipeDirection",
-			"swipeThreshold",
-			"pauseOnInteraction",
-			"pauseOnPageIdle",
-			"topLayer",
-			"aria-label",
-			"regionId",
-		],
-	);
+	const [local, others] = splitProps(mergedProps as typeof mergedProps & { id: string }, [
+		"translations",
+		"style",
+		"hotkey",
+		"duration",
+		"limit",
+		"swipeDirection",
+		"swipeThreshold",
+		"pauseOnInteraction",
+		"pauseOnPageIdle",
+		"topLayer",
+		"aria-label",
+		"regionId",
+	]);
 
-	const toasts = createMemo(() =>
+	function includeToast(toast: ToastConfig) {
+		return toast.region === local.regionId && toast.dismiss === false;
+	}
+
+	const toasts = createMemo(() => {
+		const groups = new Map<string, ToastConfig[]>();
 		toastStore
 			.toasts()
-			.filter(
-				(toast) => toast.region === local.regionId && toast.dismiss === false,
-			)
-			.slice(0, local.limit!),
-	);
+			.filter(includeToast)
+			.slice(0, local.limit)
+			.forEach(toast => {
+				const group = toast.group ?? "default";
+				if (!groups.has(group)) {
+					groups.set(group, []);
+				}
+				groups.get(group)!.push(toast);
+			});
+		return groups;
+	});
 
 	const [isPaused, setIsPaused] = createSignal(false);
 
-	const hasToasts = () => toasts().length > 0;
+	const hasToasts = () => toasts().size > 0;
 
 	const hotkeyLabel = () => {
 		return local.hotkey!.join("+").replace(/Key/g, "").replace(/Digit/g, "");
@@ -173,8 +169,7 @@ export function ToastRegion<T extends ValidComponent = "div">(
 
 	const ariaLabel = () => {
 		const label =
-			local["aria-label"] ||
-			local.translations!.notifications(TOAST_HOTKEY_PLACEHOLDER);
+			local["aria-label"] || local.translations!.notifications(TOAST_HOTKEY_PLACEHOLDER);
 
 		return label.replace(TOAST_HOTKEY_PLACEHOLDER, hotkeyLabel());
 	};
@@ -209,11 +204,7 @@ export function ToastRegion<T extends ValidComponent = "div">(
 				// In case it is a top layer, we explicitly enable pointer-events prevented by a `DismissableLayer`.
 				style={combineStyle(
 					{
-						"pointer-events": hasToasts()
-							? local.topLayer
-								? "auto"
-								: undefined
-							: "none",
+						"pointer-events": hasToasts() ? (local.topLayer ? "auto" : undefined) : "none",
 					},
 					local.style,
 				)}

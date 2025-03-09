@@ -12,12 +12,7 @@
  * https://github.com/emilkowalski/sonner/blob/0d027fd3a41013fada9d8a3ef807bcc87053bde8/src/index.tsx
  */
 
-import {
-	callHandler,
-	createGenerateId,
-	mergeDefaultProps,
-	mergeRefs,
-} from "@kobalte/utils";
+import { callHandler, createGenerateId, mergeDefaultProps, mergeRefs } from "@kobalte/utils";
 import {
 	type JSX,
 	Show,
@@ -30,11 +25,7 @@ import {
 	onMount,
 	splitProps,
 } from "solid-js";
-import {
-	type ElementOf,
-	Polymorphic,
-	type PolymorphicProps,
-} from "../polymorphic";
+import { type ElementOf, Polymorphic, type PolymorphicProps } from "../polymorphic";
 
 import { combineStyle } from "@solid-primitives/props";
 import createPresence from "solid-presence";
@@ -42,10 +33,7 @@ import { createRegisterId } from "../primitives";
 import { ToastContext, type ToastContextValue } from "./toast-context";
 import { useToastRegionContext } from "./toast-region-context";
 import { toastStore } from "./toast-store";
-import {
-	TOAST_INTL_TRANSLATIONS,
-	type ToastIntlTranslations,
-} from "./toast.intl";
+import { TOAST_INTL_TRANSLATIONS, type ToastIntlTranslations } from "./toast.intl";
 import type { ToastSwipeDirection } from "./types";
 
 const TOAST_SWIPE_START_EVENT = "toast.swipeStart";
@@ -127,9 +115,8 @@ export interface ToastRootRenderProps extends ToastRootCommonProps {
 	tabIndex: 0;
 }
 
-export type ToastRootProps<
-	T extends ValidComponent | HTMLElement = HTMLElement,
-> = ToastRootOptions & Partial<ToastRootCommonProps<ElementOf<T>>>;
+export type ToastRootProps<T extends ValidComponent | HTMLElement = HTMLElement> =
+	ToastRootOptions & Partial<ToastRootCommonProps<ElementOf<T>>>;
 
 export function ToastRoot<T extends ValidComponent = "li">(
 	props: PolymorphicProps<T, ToastRootProps<T>>,
@@ -226,7 +213,7 @@ export function ToastRoot<T extends ValidComponent = "li">(
 		local.onPause?.();
 	};
 
-	const onKeyDown: JSX.EventHandlerUnion<HTMLElement, KeyboardEvent> = (e) => {
+	const onKeyDown: JSX.EventHandlerUnion<HTMLElement, KeyboardEvent> = e => {
 		callHandler(e, local.onKeyDown);
 
 		if (e.key !== "Escape") {
@@ -240,9 +227,7 @@ export function ToastRoot<T extends ValidComponent = "li">(
 		}
 	};
 
-	const onPointerDown: JSX.EventHandlerUnion<HTMLElement, PointerEvent> = (
-		e,
-	) => {
+	const onPointerDown: JSX.EventHandlerUnion<HTMLElement, PointerEvent> = e => {
 		callHandler(e, local.onPointerDown);
 
 		if (e.button !== 0) {
@@ -252,9 +237,7 @@ export function ToastRoot<T extends ValidComponent = "li">(
 		pointerStart = { x: e.clientX, y: e.clientY };
 	};
 
-	const onPointerMove: JSX.EventHandlerUnion<HTMLElement, PointerEvent> = (
-		e,
-	) => {
+	const onPointerMove: JSX.EventHandlerUnion<HTMLElement, PointerEvent> = e => {
 		callHandler(e, local.onPointerMove);
 
 		if (!pointerStart) {
@@ -266,13 +249,9 @@ export function ToastRoot<T extends ValidComponent = "li">(
 
 		const hasSwipeMoveStarted = Boolean(swipeDelta);
 
-		const isHorizontalSwipe = ["left", "right"].includes(
-			rootContext.swipeDirection(),
-		);
+		const isHorizontalSwipe = ["left", "right"].includes(rootContext.swipeDirection());
 
-		const clamp = ["left", "up"].includes(rootContext.swipeDirection())
-			? Math.min
-			: Math.max;
+		const clamp = ["left", "up"].includes(rootContext.swipeDirection()) ? Math.min : Math.max;
 
 		const clampedX = isHorizontalSwipe ? clamp(0, x) : 0;
 		const clampedY = !isHorizontalSwipe ? clamp(0, y) : 0;
@@ -285,26 +264,16 @@ export function ToastRoot<T extends ValidComponent = "li">(
 		if (hasSwipeMoveStarted) {
 			swipeDelta = delta;
 
-			handleAndDispatchCustomEvent(
-				TOAST_SWIPE_MOVE_EVENT,
-				local.onSwipeMove,
-				eventDetail,
-			);
+			handleAndDispatchCustomEvent(TOAST_SWIPE_MOVE_EVENT, local.onSwipeMove, eventDetail);
 
 			const { x, y } = delta;
 			e.currentTarget.setAttribute("data-swipe", "move");
 			e.currentTarget.style.setProperty("--kb-toast-swipe-move-x", `${x}px`);
 			e.currentTarget.style.setProperty("--kb-toast-swipe-move-y", `${y}px`);
-		} else if (
-			isDeltaInDirection(delta, rootContext.swipeDirection(), moveStartBuffer)
-		) {
+		} else if (isDeltaInDirection(delta, rootContext.swipeDirection(), moveStartBuffer)) {
 			swipeDelta = delta;
 
-			handleAndDispatchCustomEvent(
-				TOAST_SWIPE_START_EVENT,
-				local.onSwipeStart,
-				eventDetail,
-			);
+			handleAndDispatchCustomEvent(TOAST_SWIPE_START_EVENT, local.onSwipeStart, eventDetail);
 			e.currentTarget.setAttribute("data-swipe", "start");
 
 			(e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -315,7 +284,7 @@ export function ToastRoot<T extends ValidComponent = "li">(
 		}
 	};
 
-	const onPointerUp: JSX.EventHandlerUnion<HTMLElement, PointerEvent> = (e) => {
+	const onPointerUp: JSX.EventHandlerUnion<HTMLElement, PointerEvent> = e => {
 		callHandler(e, local.onPointerUp);
 
 		const delta = swipeDelta;
@@ -332,18 +301,8 @@ export function ToastRoot<T extends ValidComponent = "li">(
 			const toast = e.currentTarget;
 
 			const eventDetail = { originalEvent: e, delta };
-			if (
-				isDeltaInDirection(
-					delta,
-					rootContext.swipeDirection(),
-					rootContext.swipeThreshold(),
-				)
-			) {
-				handleAndDispatchCustomEvent(
-					TOAST_SWIPE_END_EVENT,
-					local.onSwipeEnd,
-					eventDetail,
-				);
+			if (isDeltaInDirection(delta, rootContext.swipeDirection(), rootContext.swipeThreshold())) {
+				handleAndDispatchCustomEvent(TOAST_SWIPE_END_EVENT, local.onSwipeEnd, eventDetail);
 
 				const { x, y } = delta;
 				e.currentTarget.setAttribute("data-swipe", "end");
@@ -354,11 +313,7 @@ export function ToastRoot<T extends ValidComponent = "li">(
 
 				close();
 			} else {
-				handleAndDispatchCustomEvent(
-					TOAST_SWIPE_CANCEL_EVENT,
-					local.onSwipeCancel,
-					eventDetail,
-				);
+				handleAndDispatchCustomEvent(TOAST_SWIPE_CANCEL_EVENT, local.onSwipeCancel, eventDetail);
 
 				e.currentTarget.setAttribute("data-swipe", "cancel");
 				e.currentTarget.style.removeProperty("--kb-toast-swipe-move-x");
@@ -369,7 +324,7 @@ export function ToastRoot<T extends ValidComponent = "li">(
 
 			// Prevent click event from triggering on items within the toast when
 			// pointer up is part of a swipe gesture
-			toast.addEventListener("click", (event) => event.preventDefault(), {
+			toast.addEventListener("click", event => event.preventDefault(), {
 				once: true,
 			});
 		}
@@ -378,9 +333,9 @@ export function ToastRoot<T extends ValidComponent = "li">(
 	onMount(() => {
 		// Disable animation for updated toast.
 		if (
-			rootContext
-				.toasts()
-				.find((toast) => toast.id === local.toastId && toast.update)
+			Array.from(rootContext.toasts().values())
+				.flat()
+				.find(toast => toast.id === local.toastId && toast.update)
 		) {
 			setIsAnimationEnabled(false);
 		}
@@ -389,7 +344,7 @@ export function ToastRoot<T extends ValidComponent = "li">(
 	createEffect(
 		on(
 			() => rootContext.isPaused(),
-			(isPaused) => {
+			isPaused => {
 				if (isPaused) {
 					pauseTimer();
 				} else {
@@ -416,14 +371,14 @@ export function ToastRoot<T extends ValidComponent = "li">(
 	createEffect(
 		on(
 			() => toastStore.get(local.toastId)?.dismiss,
-			(dismiss) => dismiss && close(),
+			dismiss => dismiss && close(),
 		),
 	);
 
 	createEffect(
 		on(
 			() => present(),
-			(isPresent) => !isPresent && deleteToast(),
+			isPresent => !isPresent && deleteToast(),
 		),
 	);
 

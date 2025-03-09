@@ -25,6 +25,7 @@ import {
 	type JSX,
 	type ValidComponent,
 	createEffect,
+	createSignal,
 	on,
 	onCleanup,
 	splitProps,
@@ -34,9 +35,9 @@ import { type ElementOf, Polymorphic, type PolymorphicProps } from "../polymorph
 
 import { useToastRegionContext } from "./toast-region-context";
 
-export interface ToastListOptions {}
+export interface ToastGroupsOptions {}
 
-export interface ToastListCommonProps<T extends HTMLElement = HTMLElement> {
+export interface ToastGroupsCommonProps<T extends HTMLElement = HTMLElement> {
 	ref: T | ((el: T) => void);
 	onFocusIn: JSX.EventHandlerUnion<T, FocusEvent>;
 	onFocusOut: JSX.EventHandlerUnion<T, FocusEvent>;
@@ -44,26 +45,26 @@ export interface ToastListCommonProps<T extends HTMLElement = HTMLElement> {
 	onPointerLeave: JSX.EventHandlerUnion<T, PointerEvent>;
 }
 
-export interface ToastListRenderProps extends ToastListCommonProps {
+export interface ToastGroupsRenderProps extends ToastGroupsCommonProps {
 	children: JSX.Element;
 	tabIndex: -1;
 }
 
-export type ToastListProps<T extends ValidComponent | HTMLElement = HTMLElement> =
-	ToastListOptions & Partial<ToastListCommonProps<ElementOf<T>>>;
+export type ToastGroupsProps<T extends ValidComponent | HTMLElement = HTMLElement> =
+	ToastGroupsOptions & Partial<ToastGroupsCommonProps<ElementOf<T>>>;
 
 /**
  * The list containing all rendered toasts.
  * Must be inside a `Toast.Region`.
  */
-export function ToastList<T extends ValidComponent = "ol">(
-	props: PolymorphicProps<T, ToastListProps<T>>,
+export function ToastGroups<T extends ValidComponent = "ol">(
+	props: PolymorphicProps<T, ToastGroupsProps<T>>,
 ) {
 	let ref: HTMLElement | undefined;
 
 	const context = useToastRegionContext();
 
-	const [local, others] = splitProps(props as ToastListProps, [
+	const [local, others] = splitProps(props as ToastGroupsProps, [
 		"ref",
 		"onFocusIn",
 		"onFocusOut",
@@ -147,8 +148,10 @@ export function ToastList<T extends ValidComponent = "ol">(
 		});
 	});
 
+	const [groupCollapsed, setGroupCollapsed] = createSignal(false);
+
 	return (
-		<Polymorphic<ToastListRenderProps>
+		<Polymorphic<ToastGroupsRenderProps>
 			as="ol"
 			ref={mergeRefs(el => (ref = el), local.ref)}
 			tabIndex={-1}
@@ -158,14 +161,21 @@ export function ToastList<T extends ValidComponent = "ol">(
 			onPointerLeave={onPointerLeave}
 			{...others}
 		>
-			<For each={Array.from(context.toasts().values()).flat()}>
-				{toast =>
-					toast.toastComponent({
-						get toastId() {
-							return toast.id;
-						},
-					})
-				}
+			<For each={Array.from(context.toasts().entries())}>
+				{([groupName, toasts]) => (
+					<div class="flex flex-col -gap-10">
+						{groupName}
+						<For each={toasts}>
+							{toast =>
+								toast.toastComponent({
+									get toastId() {
+										return toast.id;
+									},
+								})
+							}
+						</For>
+					</div>
+				)}
 			</For>
 		</Polymorphic>
 	);

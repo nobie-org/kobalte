@@ -20,8 +20,7 @@ export interface ToastComponentProps {
 
 export type ToastComponent = Component<ToastComponentProps>;
 
-export interface ToastPromiseComponentProps<T, U = any>
-	extends ToastComponentProps {
+export interface ToastPromiseComponentProps<T, U = any> extends ToastComponentProps {
 	/** The state of the promise. */
 	state: ToastPromiseState;
 
@@ -32,9 +31,7 @@ export interface ToastPromiseComponentProps<T, U = any>
 	error?: U;
 }
 
-export type ToastPromiseComponent<T, U = any> = Component<
-	ToastPromiseComponentProps<T, U>
->;
+export type ToastPromiseComponent<T, U = any> = Component<ToastPromiseComponentProps<T, U>>;
 
 export interface ToastConfig {
 	/** The unique id of the toast. */
@@ -51,6 +48,15 @@ export interface ToastConfig {
 
 	/** The id of the `<Toast.Region/>` to display the toast in. */
 	region?: string;
+
+	/** The group of the toast. */
+	group?: string;
+
+	/** The date the toast was created. */
+	createdAt: Date;
+
+	/** The date the toast was updated. */
+	updatedAt: Date;
 }
 
 export interface ShowToastOptions extends Pick<ToastConfig, "region"> {}

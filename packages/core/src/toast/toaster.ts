@@ -1,30 +1,36 @@
 import { isFunction } from "@kobalte/utils";
 
 import { toastStore } from "./toast-store";
-import type {
-	ShowToastOptions,
-	ToastComponent,
-	ToastPromiseComponent,
-} from "./types";
+import type { ShowToastOptions, ToastComponent, ToastPromiseComponent } from "./types";
 
 let toastsCounter = 0;
 
 /** Adds a new toast to the visible toasts or queue depending on current state and limit, and return the id of the created toast. */
 function show(toastComponent: ToastComponent, options?: ShowToastOptions) {
 	const id = toastsCounter++;
+	console.log("show", id);
 	toastStore.add({
 		id,
 		toastComponent,
 		dismiss: false,
 		update: false,
 		region: options?.region,
+		createdAt: new Date(),
+		updatedAt: new Date(),
 	});
 	return id;
 }
 
 /** Update the toast of the given id with a new rendered component. */
 function update(id: number, toastComponent: ToastComponent) {
-	toastStore.update(id, { id, toastComponent, dismiss: false, update: true });
+	toastStore.update(id, {
+		id,
+		toastComponent,
+		dismiss: false,
+		update: true,
+		createdAt: toastStore.get(id)?.createdAt ?? new Date(),
+		updatedAt: new Date(),
+	});
 }
 
 /** Adds a new promise-based toast to the visible toasts or queue depending on current state and limit, and return the id of the created toast. */
@@ -33,7 +39,7 @@ function promise<T, U = any>(
 	toastComponent: ToastPromiseComponent<T, U>,
 	options?: ShowToastOptions,
 ) {
-	const id = show((props) => {
+	const id = show(props => {
 		return toastComponent({
 			get toastId() {
 				return props.toastId;
@@ -43,8 +49,8 @@ function promise<T, U = any>(
 	}, options);
 
 	(isFunction(promise) ? promise() : promise)
-		.then((data) =>
-			update(id, (props) => {
+		.then(data =>
+			update(id, props => {
 				return toastComponent({
 					get toastId() {
 						return props.toastId;
@@ -54,8 +60,8 @@ function promise<T, U = any>(
 				});
 			}),
 		)
-		.catch((error) =>
-			update(id, (props) => {
+		.catch(error =>
+			update(id, props => {
 				return toastComponent({
 					get toastId() {
 						return props.toastId;

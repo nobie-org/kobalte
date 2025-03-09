@@ -20,6 +20,13 @@ import {
 	type ToastListRenderProps,
 } from "./toast-list";
 import {
+	ToastGroups as Groups,
+	type ToastGroupsCommonProps,
+	type ToastGroupsOptions,
+	type ToastGroupsProps,
+	type ToastGroupsRenderProps,
+} from "./toast-groups";
+import {
 	ToastProgressFill as ProgressFill,
 	type ToastProgressFillCommonProps,
 	type ToastProgressFillOptions,
@@ -103,6 +110,10 @@ export type {
 	ToastTitleCommonProps,
 	ToastTitleRenderProps,
 	ToastTitleProps,
+	ToastGroupsOptions,
+	ToastGroupsCommonProps,
+	ToastGroupsRenderProps,
+	ToastGroupsProps,
 };
 
 export {
@@ -125,5 +136,6 @@ export const Toast = Object.assign(Root, {
 	ProgressTrack,
 	Region,
 	Title,
+	Groups,
 	toaster,
 });
