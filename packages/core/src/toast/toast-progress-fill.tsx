@@ -4,6 +4,7 @@ import {
 	createEffect,
 	createSignal,
 	onCleanup,
+	onMount,
 	splitProps,
 } from "solid-js";
 

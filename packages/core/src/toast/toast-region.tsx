@@ -16,6 +16,7 @@ import { OverrideComponentProps, createGenerateId, mergeDefaultProps } from "@ko
 import {
 	type JSX,
 	type ValidComponent,
+	createEffect,
 	createMemo,
 	createSignal,
 	createUniqueId,
@@ -157,6 +158,10 @@ export function ToastRegion<T extends ValidComponent = "div">(
 				groups.get(group)!.push(toast);
 			});
 		return groups;
+	});
+
+	createEffect(() => {
+		console.log("toasts", toasts());
 	});
 
 	const [isPaused, setIsPaused] = createSignal(false);

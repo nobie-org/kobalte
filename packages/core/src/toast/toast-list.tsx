@@ -159,10 +159,13 @@ export function ToastList<T extends ValidComponent = "ol">(
 			{...others}
 		>
 			<For each={Array.from(context.toasts().values()).flat()}>
-				{toast =>
+				{(toast, index) =>
 					toast.toastComponent({
 						get toastId() {
 							return toast.id;
+						},
+						get index() {
+							return index();
 						},
 					})
 				}

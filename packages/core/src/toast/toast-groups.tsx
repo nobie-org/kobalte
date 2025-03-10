@@ -21,21 +21,28 @@ import {
 	mergeRefs,
 } from "@kobalte/utils";
 import {
+	Component,
 	For,
+	Index,
 	type JSX,
+	ParentComponent,
 	type ValidComponent,
+	createContext,
 	createEffect,
 	createSignal,
 	on,
 	onCleanup,
 	splitProps,
+	useContext,
 } from "solid-js";
-import { isServer } from "solid-js/web";
+import { Dynamic, isServer } from "solid-js/web";
 import { type ElementOf, Polymorphic, type PolymorphicProps } from "../polymorphic";
 
 import { useToastRegionContext } from "./toast-region-context";
 
-export interface ToastGroupsOptions {}
+export interface ToastGroupsOptions {
+	GroupComp: ParentComponent<{ id: string, count: number }>;
+}
 
 export interface ToastGroupsCommonProps<T extends HTMLElement = HTMLElement> {
 	ref: T | ((el: T) => void);
@@ -70,6 +77,7 @@ export function ToastGroups<T extends ValidComponent = "ol">(
 		"onFocusOut",
 		"onPointerMove",
 		"onPointerLeave",
+		"GroupComp",
 	]);
 
 	const onFocusIn: JSX.EventHandlerUnion<HTMLElement, FocusEvent> = e => {
@@ -148,8 +156,6 @@ export function ToastGroups<T extends ValidComponent = "ol">(
 		});
 	});
 
-	const [groupCollapsed, setGroupCollapsed] = createSignal(false);
-
 	return (
 		<Polymorphic<ToastGroupsRenderProps>
 			as="ol"
@@ -161,22 +167,28 @@ export function ToastGroups<T extends ValidComponent = "ol">(
 			onPointerLeave={onPointerLeave}
 			{...others}
 		>
-			<For each={Array.from(context.toasts().entries())}>
-				{([groupName, toasts]) => (
-					<div class="flex flex-col -gap-10">
-						{groupName}
-						<For each={toasts}>
-							{toast =>
-								toast.toastComponent({
-									get toastId() {
-										return toast.id;
-									},
-								})
-							}
-						</For>
-					</div>
-				)}
-			</For>
+			<Index each={Array.from(context.toasts().entries())}>
+				{(entries) => {
+					const id = () => entries()[0];
+					const configs = () => entries()[1];
+					return (
+							<Dynamic component={local.GroupComp} id={id()} count={configs().length}>
+								<For each={configs()}>
+									{(toast, i) =>
+										toast.toastComponent({
+											get toastId() {
+												return toast.id;
+											},
+											get index() {
+												return i();
+											},
+										})
+									}
+								</For>
+						</Dynamic>
+					);
+				}}
+			</Index>
 		</Polymorphic>
 	);
 }

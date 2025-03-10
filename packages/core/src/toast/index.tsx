@@ -126,6 +126,7 @@ export {
 	Root,
 	Title,
 	toaster,
+
 };
 
 export const Toast = Object.assign(Root, {

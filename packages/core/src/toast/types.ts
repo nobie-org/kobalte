@@ -16,6 +16,7 @@ export type ToastPromiseState = "pending" | "fulfilled" | "rejected";
 export interface ToastComponentProps {
 	/** A unique id for the toast. */
 	toastId: number;
+	index: number;
 }
 
 export type ToastComponent = Component<ToastComponentProps>;
@@ -59,4 +60,4 @@ export interface ToastConfig {
 	updatedAt: Date;
 }
 
-export interface ShowToastOptions extends Pick<ToastConfig, "region"> {}
+export interface ShowToastOptions extends Pick<ToastConfig, "region" | "group"> {}

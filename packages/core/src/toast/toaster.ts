@@ -8,12 +8,12 @@ let toastsCounter = 0;
 /** Adds a new toast to the visible toasts or queue depending on current state and limit, and return the id of the created toast. */
 function show(toastComponent: ToastComponent, options?: ShowToastOptions) {
 	const id = toastsCounter++;
-	console.log("show", id);
 	toastStore.add({
 		id,
 		toastComponent,
 		dismiss: false,
 		update: false,
+		group: options?.group,
 		region: options?.region,
 		createdAt: new Date(),
 		updatedAt: new Date(),
@@ -44,6 +44,9 @@ function promise<T, U = any>(
 			get toastId() {
 				return props.toastId;
 			},
+			get index() {
+				return props.index;
+			},
 			state: "pending",
 		});
 	}, options);
@@ -55,6 +58,9 @@ function promise<T, U = any>(
 					get toastId() {
 						return props.toastId;
 					},
+					get index() {
+						return props.index;
+					},
 					state: "fulfilled",
 					data,
 				});
@@ -65,6 +71,9 @@ function promise<T, U = any>(
 				return toastComponent({
 					get toastId() {
 						return props.toastId;
+					},
+					get index() {
+						return props.index;
 					},
 					state: "rejected",
 					error,
