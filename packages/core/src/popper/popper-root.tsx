@@ -113,12 +113,6 @@ export interface PopperRootOptions {
 	 */
 	overflowPadding?: number;
 
-	/**
-	 * Whether the floating element should respect scroll container boundaries.
-	 * When true, the floating element will be constrained by scroll containers
-	 * that contain the reference element, preventing it from appearing detached during scrolling.
-	 */
-	respectScrollContainers?: boolean;
 }
 
 export interface PopperRootProps extends ParentProps<PopperRootOptions> {}
@@ -211,12 +205,13 @@ export function PopperRoot(props: PopperRootProps) {
 				throw new Error("`flip` expects a spaced-delimited list of placements");
 			}
 
+			console.log("popper flip enabled");
+
 			// https://floating-ui.com/docs/flip
 			middleware.push(
 				flip({
 					padding: mergedProps.overflowPadding,
 					fallbackPlacements: fallbackPlacements,
-					...(mergedProps.respectScrollContainers && { elementContext: "reference" }),
 				}),
 			);
 		}
@@ -228,7 +223,6 @@ export function PopperRoot(props: PopperRootProps) {
 					mainAxis: mergedProps.slide,
 					crossAxis: mergedProps.overlap,
 					padding: mergedProps.overflowPadding,
-					...(mergedProps.respectScrollContainers && { elementContext: "reference" }),
 				}),
 			);
 		}
@@ -237,7 +231,6 @@ export function PopperRoot(props: PopperRootProps) {
 		middleware.push(
 			size({
 				padding: mergedProps.overflowPadding,
-				...(mergedProps.respectScrollContainers && { elementContext: "reference" }),
 				apply({ availableWidth, availableHeight, rects }) {
 					const referenceWidth = Math.round(rects.reference.width);
 
