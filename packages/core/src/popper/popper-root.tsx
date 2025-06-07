@@ -112,6 +112,13 @@ export interface PopperRootOptions {
 	 * This will be exposed to CSS as `--kb-popper-content-overflow-padding`.
 	 */
 	overflowPadding?: number;
+
+	/**
+	 * Whether the floating element should respect scroll container boundaries.
+	 * When true, the floating element will be constrained by scroll containers
+	 * that contain the reference element, preventing it from appearing detached during scrolling.
+	 */
+	respectScrollContainers?: boolean;
 }
 
 export interface PopperRootProps extends ParentProps<PopperRootOptions> {}
@@ -209,6 +216,7 @@ export function PopperRoot(props: PopperRootProps) {
 				flip({
 					padding: mergedProps.overflowPadding,
 					fallbackPlacements: fallbackPlacements,
+					...(mergedProps.respectScrollContainers && { elementContext: "reference" }),
 				}),
 			);
 		}
@@ -220,6 +228,7 @@ export function PopperRoot(props: PopperRootProps) {
 					mainAxis: mergedProps.slide,
 					crossAxis: mergedProps.overlap,
 					padding: mergedProps.overflowPadding,
+					...(mergedProps.respectScrollContainers && { elementContext: "reference" }),
 				}),
 			);
 		}
@@ -228,6 +237,7 @@ export function PopperRoot(props: PopperRootProps) {
 		middleware.push(
 			size({
 				padding: mergedProps.overflowPadding,
+				...(mergedProps.respectScrollContainers && { elementContext: "reference" }),
 				apply({ availableWidth, availableHeight, rects }) {
 					const referenceWidth = Math.round(rects.reference.width);
 
