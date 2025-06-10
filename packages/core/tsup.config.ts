@@ -47,22 +47,29 @@ import { solidPlugin } from "esbuild-plugin-solid";
 import { type Options, defineConfig } from "tsup";
 
 function generateConfig(jsx: boolean): Options {
+	const isDevelopment = process.env.NODE_ENV === "development";
+
 	return {
 		target: "esnext",
 		platform: "browser",
 		format: "esm",
-		clean: true,
+		clean: !isDevelopment,
 		dts: !jsx,
 		entry: ["src/index.tsx", "src/*/index.tsx", "src/primitives/*/index.ts"],
 		outDir: "dist/",
 		treeshake: { preset: "smallest" },
 		replaceNodeEnv: true,
+		minify: !isDevelopment,
 		esbuildOptions(options) {
 			if (jsx) {
 				options.jsx = "preserve";
 			}
 			options.chunkNames = "[name]/[hash]";
-			// options.drop = ["console", "debugger"];
+			if (!isDevelopment) {
+				options.drop = ["console", "debugger"];
+			} else {
+				options.drop = [];
+			}
 		},
 		outExtension() {
 			return jsx ? { js: ".jsx" } : {};
