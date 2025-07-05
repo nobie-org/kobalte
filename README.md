@@ -6,6 +6,14 @@
 
 A UI toolkit for building accessible web apps and design systems with SolidJS.
 
+## NOBIE INFO
+
+- Add upstream via `git remote add kobaltedev https://github.com/kobaltedev/kobalte.git` and periodically rebase to a stable release
+- Turn `[PATCH]` commits into upstream PRs
+- Redo the `[BUILD]` commit using `sed -i '' '/^dist$/d' .gitignore && rm -rf packages/*/dist && pnpm i && pnpm run build:libs`
+- Reference this repo's `main` using exact SHA
+- For local dev, use `pnpm link YOUR_PATH_TO_KOBALTE/packages/core` in `nobie` and `pnpm build:core:watch` here
+
 ## Packages
 
 | Name                                                  |                                     Version                                      | Description                                                                                                            |
