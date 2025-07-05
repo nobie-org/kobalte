@@ -1,0 +1,1 @@
+import{a,b,c,d,e,f,g,h,i,j,k}from"../chunk/ZSYY5OQU.jsx";import"../chunk/XWCF3RNR.jsx";export{f as I18nProvider,a as RTL_LANGS,h as createCollator,i as createDateFormatter,e as createDefaultLocale,j as createFilter,k as createNumberFormatter,d as getDefaultLocale,c as getReadingDirection,b as isRTL,g as useLocale};

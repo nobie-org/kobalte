@@ -1,0 +1,1 @@
+import{splitProps as t}from"solid-js";import{Dynamic as P}from"solid-js/web";function T(o){let[e,r]=t(o,["as"]);if(!e.as)throw new Error("[kobalte]: Polymorphic is missing the required `as` prop.");return<P{...r}component={e.as}/>}export{T as a};

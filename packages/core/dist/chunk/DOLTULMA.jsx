@@ -1,0 +1,1 @@
+import{isString as i}from"@kobalte/utils";import{createEffect as c,createSignal as s}from"solid-js";function f(e,n){let[r,o]=s(t(n?.()));return c(()=>{o(e()?.tagName.toLowerCase()||t(n?.()))}),r}function t(e){return i(e)?e:void 0}export{f as a};

@@ -1,0 +1,1 @@
+import{createEffect as h,createSignal as s,onCleanup as l}from"solid-js";function d(r){let[o,c]=s(0),[i,f]=s(0);h(()=>{let e=r();if(!e)return;n(e);let t=new ResizeObserver(a);t.observe(e),l(()=>{t.disconnect()})});let a=e=>{for(let t of e)t.target===r()&&n(t.target)},n=e=>{f(e.offsetWidth),c(e.offsetHeight)};return{width:i,height:o}}export{d as a};

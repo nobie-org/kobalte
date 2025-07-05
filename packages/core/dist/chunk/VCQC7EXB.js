@@ -1,0 +1,12 @@
+import { g as g$1 } from './32UOF6BL.js';
+import { k } from './UAI26547.js';
+import { a as a$1 } from './3LFQJS72.js';
+import { a } from './JSKF3YHK.js';
+import { createComponent, mergeProps } from 'solid-js/web';
+import { createContext, useContext, splitProps, createEffect, onCleanup, createUniqueId, createSignal, createMemo } from 'solid-js';
+import { combineStyle } from '@solid-primitives/props';
+import { mergeDefaultProps, createGenerateId, clamp } from '@kobalte/utils';
+
+var Y={};a(Y,{Fill:()=>p,Label:()=>u,Progress:()=>X,Root:()=>c,Track:()=>f,ValueLabel:()=>g,useProgressContext:()=>s});var l=createContext();function s(){let r=useContext(l);if(r===void 0)throw new Error("[kobalte]: `useProgressContext` must be used within a `Progress.Root` component");return r}function p(r){let t=s(),[n,e]=splitProps(r,["style"]);return createComponent(g$1.Fill,mergeProps({get style(){return combineStyle({"--kb-progress-fill-width":t.progressFillWidth()},n.style)}},()=>t.dataset(),e))}function u(r){let t=s(),n=mergeDefaultProps({id:t.generateId("label")},r),[e,m]=splitProps(n,["id"]);return createEffect(()=>onCleanup(t.registerLabelId(e.id))),createComponent(g$1.Label,mergeProps({get id(){return e.id}},()=>t.dataset(),m))}function c(r){let t=`progress-${createUniqueId()}`,n=mergeDefaultProps({id:t,value:0,minValue:0,maxValue:100},r),[e,m]=splitProps(n,["value","minValue","maxValue","indeterminate","getValueLabel"]),[V,L]=createSignal(),$=k(()=>({style:"percent"})),i=()=>clamp(e.value,e.minValue,e.maxValue),a=()=>(i()-e.minValue)/(e.maxValue-e.minValue),_=()=>{if(!e.indeterminate)return e.getValueLabel?e.getValueLabel({value:i(),min:e.minValue,max:e.maxValue}):$().format(a())},h=()=>e.indeterminate?void 0:`${Math.round(a()*100)}%`,d=createMemo(()=>{let P;return e.indeterminate||(P=a()===1?"complete":"loading"),{"data-progress":P,"data-indeterminate":e.indeterminate?"":void 0}}),I={dataset:d,value:i,valuePercent:a,valueLabel:_,labelId:V,progressFillWidth:h,generateId:createGenerateId(()=>m.id),registerLabelId:a$1(L)};return createComponent(l.Provider,{value:I,get children(){return createComponent(g$1,mergeProps({role:"progressbar",get indeterminate(){return e.indeterminate||!1}},d,n))}})}function f(r){let t=s();return createComponent(g$1.Track,mergeProps(()=>t.dataset(),r))}function g(r){let t=s();return createComponent(g$1.ValueLabel,mergeProps(()=>t.dataset(),r))}var X=Object.assign(c,{Fill:p,Label:u,Track:f,ValueLabel:g});
+
+export { s as a, p as b, u as c, c as d, f as e, g as f, X as g, Y as h };

@@ -1,0 +1,9 @@
+import { a } from './3LFQJS72.js';
+import { a as a$1 } from './2B777EKY.js';
+import { mergeDefaultProps, access, createGenerateId } from '@kobalte/utils';
+import { createContext, createUniqueId, createSignal, createMemo, useContext, createEffect, onCleanup } from 'solid-js';
+import { createComponent, mergeProps } from 'solid-js/web';
+
+var N=["id","name","validationState","required","disabled","readOnly"];function k(r){let o=`form-control-${createUniqueId()}`,e=mergeDefaultProps({id:o},r),[d,f]=createSignal(),[p,C]=createSignal(),[s,g]=createSignal(),[l,x]=createSignal(),I=(a,F,m)=>{let P=m!=null||d()!=null;return [m,d(),P&&F!=null?a:void 0].filter(Boolean).join(" ")||void 0},b=a=>[s(),l(),a].filter(Boolean).join(" ")||void 0,v=createMemo(()=>({"data-valid":access(e.validationState)==="valid"?"":void 0,"data-invalid":access(e.validationState)==="invalid"?"":void 0,"data-required":access(e.required)?"":void 0,"data-disabled":access(e.disabled)?"":void 0,"data-readonly":access(e.readOnly)?"":void 0}));return {formControlContext:{name:()=>access(e.name)??access(e.id),dataset:v,validationState:()=>access(e.validationState),isRequired:()=>access(e.required),isDisabled:()=>access(e.disabled),isReadOnly:()=>access(e.readOnly),labelId:d,fieldId:p,descriptionId:s,errorMessageId:l,getAriaLabelledBy:I,getAriaDescribedBy:b,generateId:createGenerateId(()=>access(e.id)),registerLabel:a(f),registerField:a(C),registerDescription:a(g),registerErrorMessage:a(x)}}}var R=createContext();function u(){let r=useContext(R);if(r===void 0)throw new Error("[kobalte]: `useFormControlContext` must be used within a `FormControlContext.Provider` component");return r}function W(r){let o=u(),e=mergeDefaultProps({id:o.generateId("description")},r);return createEffect(()=>onCleanup(o.registerDescription(e.id))),createComponent(a$1,mergeProps({as:"div"},()=>o.dataset(),e))}
+
+export { N as a, k as b, R as c, u as d, W as e };

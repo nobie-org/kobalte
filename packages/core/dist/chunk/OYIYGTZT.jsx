@@ -1,0 +1,1 @@
+import{b as a}from"./A5YUKSV6.jsx";import{access as r}from"@kobalte/utils";function u(e={}){let[t,o]=a({value:()=>r(e.open),defaultValue:()=>!!r(e.defaultOpen),onChange:l=>e.onOpenChange?.(l)}),n=()=>{o(!0)},s=()=>{o(!1)};return{isOpen:t,setIsOpen:o,open:n,close:s,toggle:()=>{t()?s():n()}}}export{u as a};

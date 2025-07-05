@@ -1,0 +1,1 @@
+import{a as R}from"../chunk/HAEWETXL.jsx";import"../chunk/XWCF3RNR.jsx";import{splitProps as x}from"solid-js";function g(P){let[B,o]=x(P,["textValue"]);return<R as="span"role="status"aria-label={B.textValue}{...o}>{o.children}</R>}var f=g;export{f as Badge,g as Root};

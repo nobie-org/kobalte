@@ -1,0 +1,1 @@
+import{b as s}from"./A5YUKSV6.jsx";import{access as t}from"@kobalte/utils";function r(e={}){let[l,a]=s({value:()=>t(e.isSelected),defaultValue:()=>!!t(e.defaultIsSelected),onChange:o=>e.onSelectedChange?.(o)});return{isSelected:l,setIsSelected:o=>{!t(e.isReadOnly)&&!t(e.isDisabled)&&a(o)},toggle:()=>{!t(e.isReadOnly)&&!t(e.isDisabled)&&a(!l())}}}export{r as a};

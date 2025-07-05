@@ -1,0 +1,1 @@
+import{createEffect as o,on as s,onCleanup as u}from"solid-js";function m(e,n){o(s(e,r=>{if(r==null)return;let t=c(r);t!=null&&(t.addEventListener("reset",n,{passive:!0}),u(()=>{t.removeEventListener("reset",n)}))}))}function c(e){return i(e)?e.form:e.closest("form")}function i(e){return e.matches("textarea, input, select, button")}export{m as a};

@@ -1,0 +1,10 @@
+import { c as c$1, b } from './DLDF5P6B.js';
+import { a } from './2B777EKY.js';
+import { createComponent, mergeProps } from 'solid-js/web';
+import { mergeDefaultProps, callHandler } from '@kobalte/utils';
+import { splitProps, createMemo, createEffect, on } from 'solid-js';
+import { combineStyle } from '@solid-primitives/props';
+
+var l={empty:"Empty"};function c(t){let s=mergeDefaultProps({translations:l},t),[e,f]=splitProps(s,["style","translations","value","textValue","minValue","maxValue","validationState","onIncrement","onIncrementPage","onDecrement","onDecrementPage","onDecrementToMin","onIncrementToMax","onKeyDown","onFocus","onBlur"]),r=!1,a$1=createMemo(()=>e.textValue===""?e.translations?.empty:(e.textValue||`${e.value}`).replace("-","\u2212")),p=n=>{if(callHandler(n,e.onKeyDown),!(n.ctrlKey||n.metaKey||n.shiftKey||n.altKey||t.readOnly))switch(n.key){case"PageUp":if(e.onIncrementPage){n.preventDefault(),e.onIncrementPage();break}case"ArrowUp":case"Up":e.onIncrement&&(n.preventDefault(),e.onIncrement());break;case"PageDown":if(e.onDecrementPage){n.preventDefault(),e.onDecrementPage();break}case"ArrowDown":case"Down":e.onDecrement&&(n.preventDefault(),e.onDecrement());break;case"Home":e.onDecrementToMin&&(n.preventDefault(),e.onDecrementToMin());break;case"End":e.onIncrementToMax&&(n.preventDefault(),e.onIncrementToMax());break}},d=n=>{callHandler(n,e.onFocus),r=!0;},D=n=>{callHandler(n,e.onBlur),r=!1;};return createEffect(on(a$1,n=>{r&&(c$1("assertive"),b(n??"","assertive"));})),createComponent(a,mergeProps({as:"div",role:"spinbutton",get style(){return combineStyle({"touch-action":"none"},e.style)},get"aria-valuenow"(){return e.value!=null&&!Number.isNaN(e.value)?e.value:void 0},get"aria-valuetext"(){return a$1()},get"aria-valuemin"(){return e.minValue},get"aria-valuemax"(){return e.maxValue},get"aria-required"(){return t.required||void 0},get"aria-disabled"(){return t.disabled||void 0},get"aria-readonly"(){return t.readOnly||void 0},get"aria-invalid"(){return e.validationState==="invalid"||void 0},onKeyDown:p,onFocus:d,onBlur:D},f))}var h=c;
+
+export { c as a, h as b };

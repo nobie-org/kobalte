@@ -1,0 +1,5 @@
+import { getDocument } from '@kobalte/utils';
+
+var E="data-kb-top-layer",c,r=!1,t=[];function o(n){return t.findIndex(e=>e.node===n)}function y(n){return t[o(n)]}function d(n){return t[t.length-1].node===n}function l(){return t.filter(n=>n.isPointerBlocking)}function f(){return [...l()].slice(-1)[0]}function i(){return l().length>0}function u(n){let e=o(f()?.node);return o(n)<e}function a(n){t.push(n);}function g(n){let e=o(n);e<0||t.splice(e,1);}function p(){for(let{node:n}of t)n.style.pointerEvents=u(n)?"none":"auto";}function v(n){if(i()&&!r){let e=getDocument(n);c=document.body.style.pointerEvents,e.body.style.pointerEvents="none",r=!0;}}function B(n){if(i())return;let e=getDocument(n);e.body.style.pointerEvents=c,e.body.style.length===0&&e.body.removeAttribute("style"),r=!1;}var b={layers:t,isTopMostLayer:d,hasPointerBlockingLayer:i,isBelowPointerBlockingLayer:u,addLayer:a,removeLayer:g,indexOf:o,find:y,assignPointerEventToLayers:p,disableBodyPointerEvents:v,restoreBodyPointerEvents:B};
+
+export { E as a, b };

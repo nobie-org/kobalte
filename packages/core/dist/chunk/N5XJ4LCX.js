@@ -1,0 +1,3 @@
+function a(e,n,t){let r=[...e];return r[t]=n,r.sort((o,u)=>o-u)}function c(e,n){if(e.length===1)return 0;let t=e.map(u=>Math.abs(u-n)),r=Math.min(...t),o=t.indexOf(r);return n<e[o]?o:t.lastIndexOf(r)}function s(e){return e.slice(0,-1).map((n,t)=>e[t+1]-n)}function i(e,n){if(n>0){let t=s(e);return Math.min(...t)>=n}return !0}function l(e,n){return t=>{if(e[0]===e[1]||n[0]===n[1])return n[0];let r=(n[1]-n[0])/(e[1]-e[0]);return n[0]+r*(t-e[0])}}function m(e){e.preventDefault(),e.stopPropagation();}
+
+export { a, c as b, i as c, l as d, m as e };
